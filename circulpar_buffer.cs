@@ -2,19 +2,21 @@ public class Circular_buffer
 {
     public int[] Buffer;
 
-    public Circular_buffer(int size)
+    public Circular_buffer(int bufferSize)
     {
-        Buffer = new int[size];
-        Buffer[3] = 1;
+        Random random = new Random();
+        Buffer = new int[bufferSize];
+        Buffer[random.Next(1, bufferSize + 1)] = 1;
     }
 
 
     public void add()
     {
         int Indice = Array.IndexOf(Buffer, Buffer.Max());
-        if (Buffer[NextIndice(Indice)] == 0)
+        if (Buffer[NextIndice(Indice)] == 0 && Buffer[NextIndice(NextIndice(Indice))] == 0)
         {
             Buffer[NextIndice(Indice)] = Buffer.Max() + 1;
+            Buffer[NextIndice(NextIndice(Indice))] = Buffer.Max() + 1;
 
         }
         else
@@ -23,7 +25,7 @@ public class Circular_buffer
             int answer = Convert.ToInt32(Console.ReadLine());
             if (answer == 1)
                 Overwrite();
-            Show();
+
         }
     }
 
