@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 // ira retornar todas as possibilidades para 3 dominos
-public class Dominoes
+public class Dominoes : IEquatable<Dominoes>
 {
     public int Face1 { get; set; }
 
@@ -10,9 +10,9 @@ public class Dominoes
     public static List<string[]> Orderdominoes(List<Dominoes> dominoes)
 
     {
-        List<Dominoes> List1 = new();
+        List<Dominoes> LeftDomains = new();
 
-        List<Dominoes> List2 = new();
+        List<Dominoes> RightDomains = new();
 
         
 
@@ -24,30 +24,35 @@ public class Dominoes
         {
             var ArrayResult = new string[3];
 
+            var CentralDomain = dominoes[i];
+
             // a minha esqueda do referencial
-            List1.AddRange(dominoes.Where(n => n.Face1 == dominoes[i].Face1));
-            List1.AddRange(dominoes.Where(n => n.Face2 == dominoes[i].Face1));
+            LeftDomains.AddRange(dominoes.Where(n => n.Face1 == CentralDomain.Face1));
+            LeftDomains.AddRange(dominoes.Where(n => n.Face2 == CentralDomain.Face1));
 
 
             // a minha direita do referencial
-            List2.AddRange(dominoes.Where(n => n.Face2 == dominoes[i].Face2));
-            List2.AddRange(dominoes.Where(n => n.Face1 == dominoes[i].Face2));
+            RightDomains.AddRange(dominoes.Where(n => n.Face2 == CentralDomain.Face2));
+            RightDomains.AddRange(dominoes.Where(n => n.Face1 == CentralDomain.Face2));
 
 
-            List1.RemoveAll(x => x.Face1 == dominoes[i].Face1 && x.Face2 == dominoes[i].Face2);
-            List2.RemoveAll(x => x.Face1 == dominoes[i].Face1 && x.Face2 == dominoes[i].Face2);
+            LeftDomains.RemoveAll(x => x.Face1 == CentralDomain.Face1 && x.Face2 == CentralDomain.Face2);
+            RightDomains.RemoveAll(x => x.Face1 == CentralDomain.Face1 && x.Face2 == CentralDomain.Face2);
 
-            foreach (var item in List1)
+            var LeftDomainsNoRepetion = LeftDomains.Distinct().ToList<Dominoes>();
+            var RightDomainNoRepetion = RightDomains.Distinct().ToList<Dominoes>();
+
+            foreach (var item in LeftDomainsNoRepetion)
             {
-                ArrayResult[1] = $"{dominoes[i].Face1} | {dominoes[i].Face2} ";
+                ArrayResult[1] = $"{CentralDomain.Face1} | {CentralDomain.Face2} ";
 
-                if (item.Face1 == dominoes[i].Face1)
+                if (item.Face1 == CentralDomain.Face1)
                     ArrayResult[0] = $"{item.Face2} | {item.Face1}";
                 else
                     ArrayResult[0] = $"{item.Face1} | {item.Face2}";
 
-                foreach (var item2 in List2)
-                    if (item2.Face1 == dominoes[i].Face2)
+                foreach (var item2 in RightDomainNoRepetion)
+                    if (item2.Face1 == CentralDomain.Face2)
                     {
                         ArrayResult[2] = $"{item2.Face1} | {item2.Face2}";
                         if (ArrayResult[0].ToString()[0] == ArrayResult[2].ToString()[4])
@@ -69,6 +74,13 @@ public class Dominoes
         }
 
             return Results;
+    }
+
+    public bool Equals(Dominoes? other)
+    {
+        if(Face1 == other.Face1 && Face2 == other.Face2)
+            return true;
+        return false;
     }
 }
 
